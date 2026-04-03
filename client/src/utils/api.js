@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: "https://tea-production-c79c.up.railway.app/api",
 });
 
 // Add a request interceptor to include the auth token
 api.interceptors.request.use(
   (config) => {
-    const userInfo = localStorage.getItem('userInfo');
+    const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
       const { token } = JSON.parse(userInfo);
       if (token) {
@@ -23,7 +23,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
