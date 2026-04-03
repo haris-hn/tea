@@ -1,14 +1,30 @@
-const Product = require('../models/Product');
-const Variant = require('../models/Variant');
+const Product = require("../models/Product");
+const Variant = require("../models/Variant");
 
 exports.getProducts = async (req, res) => {
   try {
-    const { page = 1, limit = 10, category, subCategory, origin, flavor, search, sort, qualities, caffeine, allergens, organic } = req.query;
-    
-    const query = {};
+    const {
+      page = 1,
+      limit = 10,
+      category,
+      subCategory,
+      origin,
+      flavor,
+      search,
+      sort,
+      qualities,
+      caffeine,
+      allergens,
+      organic,
+    } = req.query;
+
     const toRegexArray = (str) => {
-      const arr = Array.isArray(str) ? str : str.split(',');
-      return arr.map(i => new RegExp(`^${i.trim()}$`, 'i'));
+      const arr = Array.isArray(str) ? str : str.split(",");
+
+      return arr.map((i) => {
+        const decoded = decodeURIComponent(i);
+        return new RegExp(`^${decoded.trim()}$`, "i");
+      });
     };
 
     if (category) {
@@ -24,24 +40,24 @@ exports.getProducts = async (req, res) => {
       query.flavor = { $in: toRegexArray(flavor) };
     }
     if (qualities) {
-      query['details.qualities'] = { $in: toRegexArray(qualities) };
+      query["details.qualities"] = { $in: toRegexArray(qualities) };
     }
     if (caffeine) {
-      query['details.caffeine'] = { $in: toRegexArray(caffeine) };
+      query["details.caffeine"] = { $in: toRegexArray(caffeine) };
     }
     if (allergens) {
-      query['details.allergens'] = { $in: toRegexArray(allergens) };
+      query["details.allergens"] = { $in: toRegexArray(allergens) };
     }
-    if (organic === 'true') {
+    if (organic === "true") {
       query.organic = true;
     }
-    if (search) query.name = { $regex: search, $options: 'i' };
+    if (search) query.name = { $regex: search, $options: "i" };
 
     let sortOptions = { createdAt: -1 };
-    if (sort === 'priceAsc') sortOptions = { createdAt: 1 }; // Placeholder since sorting by populated field in Mongoose is complex. Standard sort applied here.
-    
+    if (sort === "priceAsc") sortOptions = { createdAt: 1 }; // Placeholder since sorting by populated field in Mongoose is complex. Standard sort applied here.
+
     const products = await Product.find(query)
-      .populate('variants')
+      .populate("variants")
       .sort(sortOptions)
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -52,7 +68,7 @@ exports.getProducts = async (req, res) => {
     res.json({
       products,
       totalPages: Math.ceil(count / limit),
-      currentPage: Number(page)
+      currentPage: Number(page),
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -61,11 +77,11 @@ exports.getProducts = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate('variants');
+    const product = await Product.findById(req.params.id).populate("variants");
     if (product) {
       res.json(product);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -84,11 +100,13 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (product) {
       res.json(product);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -101,9 +119,9 @@ exports.deleteProduct = async (req, res) => {
     if (product) {
       await Variant.deleteMany({ product: product._id });
       await product.deleteOne();
-      res.json({ message: 'Product removed' });
+      res.json({ message: "Product removed" });
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -116,13 +134,13 @@ exports.addVariant = async (req, res) => {
     if (product) {
       const variant = new Variant({ ...req.body, product: product._id });
       await variant.save();
-      
+
       product.variants.push(variant._id);
       await product.save();
-      
+
       res.status(201).json(variant);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -130,16 +148,20 @@ exports.addVariant = async (req, res) => {
 };
 
 exports.updateVariant = async (req, res) => {
-    try {
-        const variant = await Variant.findByIdAndUpdate(req.params.variantId, req.body, {new: true});
-        if(variant) {
-            res.json(variant);
-        } else {
-            res.status(404).json({message: 'Variant not found'});
-        }
-    } catch (error) {
-        res.status(500).json({message: error.message});
+  try {
+    const variant = await Variant.findByIdAndUpdate(
+      req.params.variantId,
+      req.body,
+      { new: true },
+    );
+    if (variant) {
+      res.json(variant);
+    } else {
+      res.status(404).json({ message: "Variant not found" });
     }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 exports.deleteVariant = async (req, res) => {
@@ -148,13 +170,15 @@ exports.deleteVariant = async (req, res) => {
     if (variant) {
       const product = await Product.findById(variant.product);
       if (product) {
-        product.variants = product.variants.filter(v => v.toString() !== variant._id.toString());
+        product.variants = product.variants.filter(
+          (v) => v.toString() !== variant._id.toString(),
+        );
         await product.save();
       }
       await variant.deleteOne();
-      res.json({ message: 'Variant removed' });
+      res.json({ message: "Variant removed" });
     } else {
-      res.status(404).json({ message: 'Variant not found' });
+      res.status(404).json({ message: "Variant not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -163,23 +187,23 @@ exports.deleteVariant = async (req, res) => {
 
 exports.getFilters = async (req, res) => {
   try {
-    const categories = await Product.distinct('category');
-    const subCategories = await Product.distinct('subCategory');
-    const origins = await Product.distinct('origin');
-    const flavors = await Product.distinct('flavor');
-    const qualities = await Product.distinct('details.qualities');
-    const caffeine = await Product.distinct('details.caffeine');
-    const allergens = await Product.distinct('details.allergens');
-    
+    const categories = await Product.distinct("category");
+    const subCategories = await Product.distinct("subCategory");
+    const origins = await Product.distinct("origin");
+    const flavors = await Product.distinct("flavor");
+    const qualities = await Product.distinct("details.qualities");
+    const caffeine = await Product.distinct("details.caffeine");
+    const allergens = await Product.distinct("details.allergens");
+
     // Filter out falsy/empty values from distinct queries
-    res.json({ 
-      categories: categories.filter(Boolean), 
-      subCategories: subCategories.filter(Boolean), 
-      origins: origins.filter(Boolean), 
+    res.json({
+      categories: categories.filter(Boolean),
+      subCategories: subCategories.filter(Boolean),
+      origins: origins.filter(Boolean),
       flavors: flavors.filter(Boolean),
       qualities: qualities.filter(Boolean),
       caffeine: caffeine.filter(Boolean),
-      allergens: allergens.filter(Boolean)
+      allergens: allergens.filter(Boolean),
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
