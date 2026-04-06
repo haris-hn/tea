@@ -43,8 +43,8 @@ const CartDrawer = () => {
                 <div key={item._id} className="flex space-x-6">
                   <div className="w-20 h-20 bg-gray-50 flex-shrink-0 overflow-hidden">
                      <img 
-                      src={item.variant.product?.images?.[0] || item.variant.product?.image || "https://images.unsplash.com/photo-1594631252845-29fc45865157?q=80&w=1000"} 
-                      alt={item.variant.product?.name}
+                      src={item.variant?.product?.images?.[0] || item.variant?.product?.image || "https://images.unsplash.com/photo-1594631252845-29fc45865157?q=80&w=1000"} 
+                      alt={item.variant?.product?.name}
                       className="w-full h-full object-cover"
                      />
                   </div>
@@ -52,10 +52,10 @@ const CartDrawer = () => {
                   <div className="flex-grow flex justify-between items-start pt-1">
                     <div className="pr-4 max-w-[60%]">
                       <h3 className="text-[11px] text-gray-800 font-medium leading-relaxed">
-                        {item.variant.product?.name} - {item.variant.sizeOrWeight}
+                        {item.variant?.product?.name} - {item.variant?.sizeOrWeight}
                       </h3>
                       <button 
-                        onClick={() => removeFromCart(item.variant._id)}
+                        onClick={() => removeFromCart(item.variant?._id)}
                         className="text-[9px] font-bold text-gray-400 hover:text-black uppercase tracking-widest mt-3"
                       >
                         REMOVE
@@ -66,6 +66,7 @@ const CartDrawer = () => {
                       <div className="flex items-center space-x-3">
                         <button 
                           onClick={async () => {
+                            if (!item.variant?._id) return;
                             const res = await updateQuantity(item.variant._id, Math.max(1, item.quantity - 1));
                             if (!res.success) alert(res.message);
                           }}
@@ -76,6 +77,7 @@ const CartDrawer = () => {
                         <span className="text-xs font-medium w-4 text-center">{item.quantity}</span>
                         <button 
                           onClick={async () => {
+                            if (!item.variant?._id) return;
                             const res = await updateQuantity(item.variant._id, item.quantity + 1);
                             if (!res.success) alert(res.message);
                           }}
@@ -85,7 +87,7 @@ const CartDrawer = () => {
                         </button>
                       </div>
                       <p className="text-xs font-bold text-gray-900">
-                        €{(item.variant.price * item.quantity).toFixed(2)}
+                        €{((item.variant?.price || 0) * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>

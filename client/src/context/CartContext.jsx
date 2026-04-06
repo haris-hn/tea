@@ -66,7 +66,7 @@ export const CartProvider = ({ children }) => {
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   const cartCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
-  const cartTotal = cart?.items?.reduce((acc, item) => acc + (item.variant.price * item.quantity), 0) || 0;
+  const cartTotal = cart?.items?.reduce((acc, item) => acc + (item.variant?.price || 0) * item.quantity, 0) || 0;
 
   return (
     <CartContext.Provider value={{ 
