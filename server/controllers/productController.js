@@ -1,6 +1,10 @@
 const Product = require("../models/Product");
 const Variant = require("../models/Variant");
 
+const escapeRegex = (string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
 exports.getProducts = async (req, res) => {
   try {
     const {
@@ -24,7 +28,7 @@ exports.getProducts = async (req, res) => {
 
       return arr.map((i) => {
         const decoded = decodeURIComponent(i);
-        return new RegExp(`^${decoded.trim()}$`, "i");
+        return new RegExp(`^${escapeRegex(decoded.trim())}$`, "i");
       });
     };
 
