@@ -27,7 +27,8 @@ exports.getProducts = async (req, res) => {
       const arr = Array.isArray(str) ? str : str.split(",");
 
       return arr.map((i) => {
-        const decoded = decodeURIComponent(i);
+        const withSpaces = i.replace(/\+/g, " ");
+        const decoded = decodeURIComponent(withSpaces);
         return new RegExp(`^${escapeRegex(decoded.trim())}$`, "i");
       });
     };
