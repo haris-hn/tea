@@ -17,6 +17,7 @@ exports.getProducts = async (req, res) => {
       allergens,
       organic,
     } = req.query;
+    let query = {};
 
     const toRegexArray = (str) => {
       const arr = Array.isArray(str) ? str : str.split(",");
