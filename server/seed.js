@@ -23,12 +23,13 @@ const seedData = async () => {
 
     for (const [idx, cat] of categories.entries()) {
       const teaImages = [
-        'https://images.unsplash.com/photo-1594631252845-29fc458695d6?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=800&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?q=80&w=800&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1544787210-22bb1ed057c6?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=800&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1515696955266-4f67e13219e8?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?q=80&w=800&auto=format&fit=crop'
+        'https://images.unsplash.com/photo-1594236053804-032066c0dd86?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?q=80&w=800&auto=format&fit=crop'
       ];
 
       const product = await Product.create({
