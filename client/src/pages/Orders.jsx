@@ -8,18 +8,27 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const fetchOrders = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
+    try {
+      const { data } = await api.get("/orders/myorders");
+      setOrders(data);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch orders");
+    } finally {
+      if (showLoading) setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const { data } = await api.get("/orders/myorders");
-        setOrders(data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch orders");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchOrders();
+
+    // Polling every 30 seconds for live status updates
+    const interval = setInterval(() => {
+      fetchOrders(false);
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getStatusColor = (status) => {
@@ -51,13 +60,22 @@ const Orders = () => {
       <div className="max-w-5xl mx-auto px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Your Orders</h1>
-            <nav className="flex items-center space-x-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 mt-2">
-              <Link to="/" className="hover:text-black">Home</Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-black">Order History</span>
-            </nav>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">Your Orders</h1>
+              <nav className="flex items-center space-x-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 mt-2">
+                <Link to="/" className="hover:text-black">Home</Link>
+                <ChevronRight className="w-3 h-3" />
+                <span className="text-black">Order History</span>
+              </nav>
+            </div>
+            <button 
+              onClick={() => fetchOrders()}
+              className="flex items-center space-x-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-black transition-colors"
+            >
+              <Clock className="w-3 h-3" />
+              <span>Refresh Status</span>
+            </button>
           </div>
           <Link to="/collections" className="flex items-center space-x-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-black transition-colors">
             <ArrowLeft className="w-3 h-3" />
