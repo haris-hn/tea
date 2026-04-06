@@ -23,13 +23,15 @@ const seedData = async () => {
 
     for (const [idx, cat] of categories.entries()) {
       const teaImages = [
-        'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1544787210-22bb1ed057c6?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1515696955266-4f67e13219e8?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1594236053804-032066c0dd86?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?q=80&w=800&auto=format&fit=crop'
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775134400/tea_products/wmexun7flooizh6jbmog.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775134389/tea_products/rp8svzscuwrsl2e5pzz9.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775132847/tea_products/kjpbkq86pijqk8xhqweh.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775132757/tea_products/yx2mug37ziaxo8dypaxg.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775132645/tea_products/xozyqyeclbmtqedrgpk4.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775132481/tea_products/q8pzhtdt0vex9oohmbur.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775131100/tea_products/l7gw4hzhevl0riuaomox.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775131030/tea_products/otg3gjip9zw7bgvkixp6.png',
+        'https://res.cloudinary.com/dtvfi3f7h/image/upload/v1775130930/tea_products/jkssga3gwlyoruspcmxi.png'
       ];
 
       const product = await Product.create({
