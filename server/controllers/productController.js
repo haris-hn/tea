@@ -98,12 +98,25 @@ exports.createProduct = async (req, res) => {
   try {
     const product = new Product(req.body);
     const createdProduct = await product.save();
+
+    // ✅ CREATE DEFAULT VARIANT
+    const variant = await Variant.create({
+      product: createdProduct._id,
+      sizeOrWeight: req.body.sizeOrWeight || "Default",
+      price: req.body.price || 10,
+      stock: req.body.stock || 10,
+    });
+
+    // ✅ LINK VARIANT TO PRODUCT
+    createdProduct.variants.push(variant._id);
+    await createdProduct.save();
+
     res.status(201).json(createdProduct);
   } catch (error) {
+    console.error("CREATE PRODUCT ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
-
 exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
