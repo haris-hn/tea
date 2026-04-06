@@ -61,7 +61,7 @@ const AddProduct = () => {
   };
 
   const [variants, setVariants] = useState([
-    { sku: "", sizeOrWeight: "50 g", price: "", stock: "" },
+    { sku: "", sizeOrWeight: "50 g", price: "", stock: 100 },
   ]);
 
   useEffect(() => {

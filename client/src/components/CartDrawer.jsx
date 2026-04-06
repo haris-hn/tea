@@ -65,14 +65,20 @@ const CartDrawer = () => {
                     <div className="flex flex-col items-end space-y-3">
                       <div className="flex items-center space-x-3">
                         <button 
-                          onClick={() => updateQuantity(item.variant._id, Math.max(1, item.quantity - 1))}
+                          onClick={async () => {
+                            const res = await updateQuantity(item.variant._id, Math.max(1, item.quantity - 1));
+                            if (!res.success) alert(res.message);
+                          }}
                           className="text-gray-400 hover:text-black"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
                         <span className="text-xs font-medium w-4 text-center">{item.quantity}</span>
                         <button 
-                          onClick={() => updateQuantity(item.variant._id, item.quantity + 1)}
+                          onClick={async () => {
+                            const res = await updateQuantity(item.variant._id, item.quantity + 1);
+                            if (!res.success) alert(res.message);
+                          }}
                           className="text-gray-400 hover:text-black"
                         >
                           <Plus className="w-3 h-3" />

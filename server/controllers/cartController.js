@@ -25,7 +25,7 @@ exports.addToCart = async (req, res) => {
     }
 
     if (variant.stock < quantity) {
-      return res.status(400).json({ message: 'Not enough stock available' });
+      return res.status(400).json({ message: `Not enough stock available. Only ${variant.stock} left.` });
     }
 
     let cart = await Cart.findOne({ user: req.user._id });
@@ -38,7 +38,7 @@ exports.addToCart = async (req, res) => {
     if (itemIndex > -1) {
       const newQuantity = cart.items[itemIndex].quantity + qty;
       if (variant.stock < newQuantity) {
-        return res.status(400).json({ message: 'Not enough stock available for this quantity' });
+        return res.status(400).json({ message: `Not enough stock available for this quantity. Only ${variant.stock} left.` });
       }
       cart.items[itemIndex].quantity = newQuantity;
     } else {
@@ -87,7 +87,7 @@ exports.updateCartItemQuantity = async (req, res) => {
     }
 
     if (variant.stock < qty) {
-      return res.status(400).json({ message: 'Not enough stock available' });
+      return res.status(400).json({ message: `Not enough stock available. Only ${variant.stock} left.` });
     }
 
     let cart = await Cart.findOne({ user: req.user._id });
