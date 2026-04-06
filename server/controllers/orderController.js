@@ -64,24 +64,54 @@ exports.getAllOrders = async (req, res) => {
 exports.updateOrderStatus = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    if (order) {
-      order.status = req.body.status || order.status;
-      const updatedOrder = await order.save();
-      res.json(updatedOrder);
-    } else {
-      res.status(404).json({ message: 'Order not found' });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
     }
+
+    const oldStatus = order.status;
+    const newStatus = req.body.status;
+
+    // Handle Stock adjustments when status changes
+    if (newStatus === 'cancelled' && oldStatus !== 'cancelled') {
+      // Returning items to stock
+      for (const item of order.items) {
+        const variant = await Variant.findById(item.variant);
+        if (variant) {
+          variant.stock += item.quantity;
+          await variant.save();
+        }
+      }
+    } else if (oldStatus === 'cancelled' && newStatus !== 'cancelled') {
+        // Re-deducting from stock if moving out of 'cancelled'
+        for (const item of order.items) {
+            const variant = await Variant.findById(item.variant);
+            if (variant) {
+                // Check if enough stock exists before moving out of cancelled
+                if (variant.stock < item.quantity) {
+                    return res.status(400).json({ message: `Not enough stock to reactive order for ${variant.sku}` });
+                }
+                variant.stock -= item.quantity;
+                await variant.save();
+            }
+        }
+    }
+
+    order.status = newStatus || order.status;
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+
 exports.getDashboardStats = async (req, res) => {
   try {
-    const totalOrders = await Order.countDocuments();
-    const orders = await Order.find({});
-    const totalRevenue = orders.reduce((acc, order) => acc + order.totalAmount, 0);
-    
+    // Only count non-cancelled orders for revenue
+    const activeOrders = await Order.find({ status: { $ne: 'cancelled' } });
+    const totalRevenue = activeOrders.reduce((acc, order) => acc + order.totalAmount, 0);
+    const totalOrders = await Order.countDocuments(); // Keeping total orders count as all orders
+
     // For products and users, we can import models here or just count them
     const Product = require('../models/Product');
     const User = require('../models/User');
@@ -99,3 +129,4 @@ exports.getDashboardStats = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
