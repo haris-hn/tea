@@ -20,8 +20,11 @@ exports.addToCart = async (req, res) => {
   try {
     const { variantId, quantity } = req.body;
     const variant = await Variant.findById(variantId);
+    if (!variant) {
+      return res.status(404).json({ message: 'Product variant not found. Please refresh your page.' });
+    }
 
-    if (!variant || variant.stock < quantity) {
+    if (variant.stock < quantity) {
       return res.status(400).json({ message: 'Not enough stock available' });
     }
 
@@ -79,7 +82,11 @@ exports.updateCartItemQuantity = async (req, res) => {
     if (qty < 1) return res.status(400).json({ message: 'Quantity must be at least 1' });
 
     const variant = await Variant.findById(variantId);
-    if (!variant || variant.stock < qty) {
+    if (!variant) {
+      return res.status(404).json({ message: 'Product variant not found. Please refresh your page.' });
+    }
+
+    if (variant.stock < qty) {
       return res.status(400).json({ message: 'Not enough stock available' });
     }
 
