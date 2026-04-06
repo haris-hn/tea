@@ -99,15 +99,17 @@ exports.createProduct = async (req, res) => {
     const product = new Product(req.body);
     const createdProduct = await product.save();
 
-    // ✅ CREATE DEFAULT VARIANT
+    // ✅ GENERATE SKU
+    const sku = `SKU-${Date.now()}`;
+
     const variant = await Variant.create({
       product: createdProduct._id,
+      sku, // ✅ REQUIRED FIX
       sizeOrWeight: req.body.sizeOrWeight || "Default",
       price: req.body.price || 10,
       stock: req.body.stock || 10,
     });
 
-    // ✅ LINK VARIANT TO PRODUCT
     createdProduct.variants.push(variant._id);
     await createdProduct.save();
 
