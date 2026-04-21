@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import ReviewSection from "../components/ReviewSection";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -449,8 +450,13 @@ const ProductDetail = () => {
         </div>
       </div>
 
+      {/* Review Section */}
+      <div className="border-t border-gray-100">
+        <ReviewSection productId={id} />
+      </div>
+
       {/* Related Products: YOU MAY ALSO LIKE */}
-      <div className="max-w-7xl mx-auto px-8 py-32">
+      <div className="max-w-7xl mx-auto px-8 py-32 text-center md:text-left">
         <h2 className="text-4xl font-bold tracking-tight text-center text-gray-900 mb-20 italic">
           You may also like
         </h2>

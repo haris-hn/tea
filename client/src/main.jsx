@@ -18,16 +18,21 @@ const theme = createTheme({
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { SocketProvider } from './context/SocketContext';
+import { Toaster } from 'react-hot-toast';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <CartProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <App />
-        </ThemeProvider>
-      </CartProvider>
+      <SocketProvider>
+        <CartProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Toaster />
+            <App />
+          </ThemeProvider>
+        </CartProvider>
+      </SocketProvider>
     </AuthProvider>
   </React.StrictMode>,
 )
