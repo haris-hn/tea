@@ -3,7 +3,7 @@ import axios from "axios";
 // This will use localhost during development and the VITE_NEST_API_URL during production (Vercel)
 const isProd = import.meta.env.PROD;
 const baseURL = isProd 
-  ? (import.meta.env.VITE_NEST_API_URL || "https://your-nest-domain.up.railway.app") 
+  ? (import.meta.env.VITE_NEST_API_URL || "https://focused-presence-production-e1f3.up.railway.app") 
   : "http://localhost:5001";
 
 const nestApi = axios.create({

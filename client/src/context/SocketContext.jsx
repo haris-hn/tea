@@ -12,9 +12,13 @@ export const SocketProvider = ({ children }) => {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Only connect if user is logged in
     if (user) {
-      const newSocket = io('http://localhost:5001', {
+      const isProd = import.meta.env.PROD;
+      const socketUrl = isProd 
+        ? (import.meta.env.VITE_NEST_API_URL || "https://focused-presence-production-e1f3.up.railway.app") 
+        : "http://localhost:5001";
+
+      const newSocket = io(socketUrl, {
         query: { userId: user._id }
       });
 
