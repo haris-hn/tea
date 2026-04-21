@@ -21,6 +21,7 @@ const Checkout = () => {
     loading: cartLoading,
     updateQuantity,
     removeFromCart,
+    clearCart,
   } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1: Bag, 2: Delivery, 3: Payment
@@ -49,6 +50,7 @@ const Checkout = () => {
       const { data } = await api.post("/orders", {
         shippingAddress: `${formData.address}, ${formData.city}, ${formData.zipCode}, ${formData.country}`,
       });
+      clearCart();
       navigate(`/order-success/${data._id}`);
     } catch (error) {
       alert(error.response?.data?.message || "Failed to place order");

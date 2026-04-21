@@ -11,7 +11,7 @@ const Footer = () => {
           <ul className="space-y-3 text-[11px] font-medium text-gray-500 tracking-wide">
             {['Black teas', 'Green teas', 'White teas', 'Herbal teas', 'Matcha', 'Chai', 'Oolong', 'Rooibos', 'Teaware'].map((item) => (
               <li key={item} className="hover:text-black transition-colors cursor-pointer">
-                <Link to={`/collections/${item.toLowerCase().replace(' ', '-')}`}>{item}</Link>
+                <Link to="#">{item}</Link>
               </li>
             ))}
           </ul>
@@ -22,7 +22,9 @@ const Footer = () => {
           <h3 className="text-xs font-bold tracking-widest text-gray-800 mb-6 uppercase">Learn</h3>
           <ul className="space-y-3 text-[11px] font-medium text-gray-500 tracking-wide">
             {['About us', 'About our teas', 'Tea academy'].map((item) => (
-              <li key={item} className="hover:text-black transition-colors cursor-pointer">{item}</li>
+              <li key={item} className="hover:text-black transition-colors cursor-pointer">
+                <Link to="#">{item}</Link>
+              </li>
             ))}
           </ul>
         </div>
@@ -32,7 +34,9 @@ const Footer = () => {
           <h3 className="text-xs font-bold tracking-widest text-gray-800 mb-6 uppercase">Customer Service</h3>
           <ul className="space-y-3 text-[11px] font-medium text-gray-500 tracking-wide">
             {['Ordering and payment', 'Delivery', 'Privacy and policy', 'Terms & Conditions'].map((item) => (
-              <li key={item} className="hover:text-black transition-colors cursor-pointer">{item}</li>
+              <li key={item} className="hover:text-black transition-colors cursor-pointer">
+                <Link to="#">{item}</Link>
+              </li>
             ))}
           </ul>
         </div>
@@ -61,3 +65,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

@@ -63,6 +63,10 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const clearCart = () => {
+    setCart({ items: [] });
+  };
+
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   const cartCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
@@ -75,6 +79,7 @@ export const CartProvider = ({ children }) => {
       addToCart, 
       updateQuantity, 
       removeFromCart, 
+      clearCart,
       cartCount, 
       cartTotal,
       isDrawerOpen,
