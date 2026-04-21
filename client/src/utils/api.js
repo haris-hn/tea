@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const isProd = import.meta.env.PROD;
+const expressURL = isProd
+  ? (import.meta.env.VITE_EXPRESS_API_URL || "https://tea-production-c79c.up.railway.app/api")
+  : "http://localhost:5000/api";
+
 const api = axios.create({
-  baseURL: "https://tea-production-c79c.up.railway.app/api",
+  baseURL: expressURL,
 });
 
 // Add a request interceptor to include the auth token
